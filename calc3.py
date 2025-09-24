@@ -91,6 +91,11 @@ class Interpreter:
         else:
             self.error()
 
+    def term(self):
+        token = self.current_token #save current token before calling eat
+        self.eat(INTEGER)
+        return token.value
+
     #Asserting a structure: INT -> OPER -> INT ... i.e. 'parsing' & interpreting
     def expr(self):
 
@@ -106,22 +111,17 @@ class Interpreter:
             if oper.type == PLUS:
                 #move to term after +
                 self.eat(PLUS)
-                #term after + added
-                result = result + self.current_token.value
-                #move to next operator
-                self.eat(INTEGER) 
+                #term after + added and moved to next operator
+                result = result + self.term()
             elif oper.type == MINUS:
                 self.eat(MINUS)
-                result = result - self.current_token.value
-                self.eat(INTEGER)  
+                result = result - self.term()
             elif oper.type == MULT:
                 self.eat(MULT)
-                result = result * self.current_token.value
-                self.eat(INTEGER)  
+                result = result * self.term()
             else:
                 self.eat(DIV)
-                result = result / self.current_token.value
-                self.eat(INTEGER)   
+                result = result / self.term()
 
         return result
     
