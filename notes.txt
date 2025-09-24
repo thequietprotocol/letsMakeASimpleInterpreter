@@ -1,0 +1,45 @@
+Goal: To interpret the following Pascal code
+
+program factorial;
+
+function factorial(n: integer): longint;
+begin
+    if n = 0 then
+        factorial := 1
+    else
+        factorial := n * factorial(n - 1);
+end;
+
+var
+    n: integer;
+
+begin
+    for n := 0 to 16 do
+        writeln(n, '! = ', factorial(n));
+end.
+
+
+*   A grammar specifies the syntax of a programming language in a concise manner. Unlike syntax diagrams, grammars are very compact.
+*   There is a set of tools, called parser generators, which accept a grammar as an input and automatically generate a parser.
+*   A grammar consists of a sequence of rules, also known as productions.
+*   A rule consists of a non-terminal, called the head or left-hand side of the production, a colon, and a sequence of terminals 
+    and/or non-terminals, called the body or right-hand side of the production.
+*   The non-terminal symbol on the left side of the first rule is called the start symbol.
+
+|      - Alternatives. A bar means “or”. So (MUL | DIV) means either MUL or DIV.
+( … )  - An open and closing parentheses mean grouping of terminals and/or non-terminals as in (MUL | DIV).
+( … )* - Match contents within the group zero or more times.
+
+* A grammar defines a language by explaining what sentences it can form.
+
+Here are the guidelines that we will use to convert the grammar to source code:
+
+1.  Each rule, R, defined in the grammar, becomes a method with the same name, and references to that rule become a method call: R(). 
+    The body of the method follows the flow of the body of the rule using the very same guidelines.
+
+2. Alternatives (a1 | a2 | aN) become an if-elif-else statement
+
+3. An optional grouping (…)* becomes a while statement that can loop over zero or more times
+
+4.  Each token reference T becomes a call to the method eat: eat(T). The way the eat method works is that it consumes the token T if it 
+    matches the current lookahead token, then it gets a new token from the lexer and assigns that token to the current_token internal variable.
