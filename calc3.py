@@ -121,7 +121,7 @@ class Interpreter:
                 result = result * self.term()
             else:
                 self.eat(DIV)
-                result = result / self.term()
+                result = result // self.term()
 
         return result
     
