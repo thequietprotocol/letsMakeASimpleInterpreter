@@ -25,7 +25,7 @@ class Lexer:
         self.current_char = self.text[0]
     
     def error(self):
-        raise Exception('Invalid Character')
+        raise Exception('Invalid Character at position {p}'.format(p=self.pos+1))
     
     def advance(self):
         self.pos += 1
@@ -95,8 +95,6 @@ class Interpreter:
     #Asserting a structure: INT -> OPER -> INT ... i.e. 'parsing' & interpreting
     def expr(self):
 
-        self.current_token = self.get_next_token()
-
         #Accumulate result: take first term and move to first op
         result = self.factor()
 
@@ -128,7 +126,8 @@ def main():
             break
         if not text:  #if only empty string
             continue
-        interpreter = Interpreter(text)
+        lexer = Lexer(text)
+        interpreter = Interpreter(lexer)
         result = interpreter.expr()
         print(result)
 
